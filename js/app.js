@@ -5,6 +5,13 @@
       var gridDiv = document.querySelector('#myGrid');
       console.log('gridDiv = ' + gridDiv);
 
+      var pmiClassRule = {
+         'dark_green': function(params) {
+            console.log(params);
+            return true;
+         }
+      };
+
       var gridOptions = {
          columnDefs: [
             {field: 'Country/Region'},
@@ -12,16 +19,26 @@
             {field: 'Prior 3M Avg'},
             {field: '07-2017'},
             {field: '08-2017'},
-            {field: '09-2017'},
+            {field: '09-2017', cellClassRules: pmiClassRule},
             {field: 'Comments'},
          ],
       };
 
-      new agGrid.Grid(gridDiv, gridOptions);
+   function autoSizeAll() {
+      var allColumnIds = [];
+      gridOptions.columnDefs.forEach( function(columnDef) {
+         allColumnIds.push(columnDef.field);
+      });
+      gridOptions.columnApi.autoSizeColumns(allColumnIds);
+   }
+
+      var grid = new agGrid.Grid(gridDiv, gridOptions);
 
       jsonLoad( function(data) {
          gridOptions.api.setRowData(data);
+         autoSizeAll();
       });
+
    });
 
 })();
